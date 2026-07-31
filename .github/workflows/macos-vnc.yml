@@ -33,11 +33,7 @@ jobs:
           # Also set system VNC password key (some runners require this)
           sudo /usr/libexec/PlistBuddy -c "Add :VNCLegacyPasswords array" /Library/Preferences/com.apple.RemoteManagement.plist 2>/dev/null || true
           sudo /usr/libexec/PlistBuddy -c "Delete :VNCLegacyPasswords:0" /Library/Preferences/com.apple.RemoteManagement.plist 2>/dev/null || true
-          HASH=$(python3 - <<'PY'
-import sys,hashlib
-print(hashlib.md5(b"P@ssw0rd123!").hexdigest())
-PY
-)
+          HASH=5fe71ffb6aa465e11cee013955c28beb # inlined to avoid yaml syntax error
           sudo /usr/libexec/PlistBuddy -c "Add :VNCLegacyPasswords:0 data $(echo $HASH | xxd -r -p | base64)" /Library/Preferences/com.apple.RemoteManagement.plist
           sudo launchctl unload /System/Library/LaunchDaemons/com.apple.screensharing.plist 2>/dev/null || true
           sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.screensharing.plist
